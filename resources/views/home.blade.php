@@ -34,7 +34,7 @@
                         @csrf
                         
                         <div class="form-group">
-                            <label for="currency">Example select</label>
+                            <label for="currency">Wallet cryptocurrency</label>
                             <select class="form-control" name="currency" id="currency">
                                 @foreach($currencies as $currency)
                                     <option>{{ $currency }}</option>
@@ -43,8 +43,8 @@
                         </div>
                         
                         <div class="form-group">
-                            <label for="wallet">Another label</label>
-                            <input type="text" class="form-control" id="wallet" name="wallet" value="{{ old('wallet') }}" placeholder="Cryptocurrency wallet number">
+                            <label for="address">Wallet address</label>
+                            <input type="text" class="form-control" id="address" name="address" value="{{ old('address') }}" placeholder="Please, enter the cryptocurrency wallet address">
                         </div>
                         
                         <button type="submit" class="btn btn-primary">Add wallet</button>

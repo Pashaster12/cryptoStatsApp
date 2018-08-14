@@ -3,7 +3,7 @@
 return [
     'currencies' => [
         'ETH',
-        'LTH',
+        'LTC',
         'BTC'
     ],
 ];
