@@ -7,19 +7,14 @@ use App\Services\LaravelCryptoStats\Connectors\{EtherscanConnector, ChainsoConne
 
 class LaravelCryptoStats
 {
-    private $instance;
-    
     private function getInstance($currency)
     {
         if($currency)
         {
-            if($currency == 'ETH') $this->instance = new EtherscanConnector();
-            elseif($currency == 'BTC' || $currency == 'LTH') $this->instance = new ChainsoConnector();
-            else {
-                throw new RuntimeException('"' . $currency . '" cryptocurrency is not supported now! List of the currently available values: "BTC", "LTH", "ETH"');
-            }
+            if($currency == 'ETH') return new EtherscanConnector();
+            elseif($currency == 'BTC' || $currency == 'LTH') return new ChainsoConnector();
             
-            return $this->instance;
+            throw new RuntimeException('"' . $currency . '" cryptocurrency is not supported now! List of the currently available values: "BTC", "LTH", "ETH"');
         }
         
         throw new RuntimeException('Currency can not be null!');
