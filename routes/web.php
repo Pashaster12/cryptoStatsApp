@@ -13,4 +13,8 @@
 
 Auth::routes();
 
+//Application routes
 Route::get('/', 'HomeController@index')->name('home');
+    
+//Ajax routes
+Route::post('/addWallet', 'HomeController@addWallet');

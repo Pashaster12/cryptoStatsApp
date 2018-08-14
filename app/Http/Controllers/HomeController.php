@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Services\LaravelCryptoStats\LaravelCryptoStatsFacade;
 
 class HomeController extends Controller
 {
@@ -23,6 +24,26 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        $data['currencies'] = LaravelCryptoStatsFacade::getCurrencies();
+        $data['wallets'] = [];
+        
+        return view('home', $data);
     }
+    
+    public function addWallet(Request $request)
+    {
+        if ($request->post())
+        {
+            /*$request->validate([
+                'currency' => 'required|string|max:3',
+                'wallet' => 'required|unique:wallets',
+            ]);*/
+            
+            $a = LaravelCryptoStatsFacade::validateWallet($request->currency, $request->wallet);
+            dd($a);
+            
+            return view('home');
+        }
+    }
+
 }
