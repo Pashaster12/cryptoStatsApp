@@ -14,4 +14,14 @@ class Wallet extends Model
     protected $fillable = [
         'address'
     ];
+    
+    public $timestamps = false;
+    
+    /**
+     * The wallet_infos that belong to the wallet.
+     */
+    public function wallet_infos()
+    {
+        return $this->hasMany('App\WalletInfo');
+    }
 }
