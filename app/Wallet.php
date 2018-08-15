@@ -20,7 +20,7 @@ class Wallet extends Model
     /**
      * The wallet_infos that belong to the wallet.
      */
-    public function wallet_infos()
+    public function infos()
     {
         return $this->hasMany('App\WalletInfo');
     }

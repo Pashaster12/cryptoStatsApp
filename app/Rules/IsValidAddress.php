@@ -3,7 +3,7 @@
 namespace App\Rules;
 
 use Illuminate\Contracts\Validation\Rule;
-use App\Services\LaravelCryptoStats\LaravelCryptoStatsFacade;
+use CryptoStat;
 
 class IsValidAddress implements Rule
 {
@@ -28,7 +28,7 @@ class IsValidAddress implements Rule
      */
     public function passes($attribute, $value)
     {
-        $is_valid = LaravelCryptoStatsFacade::validateAddress($this->currency, $value);
+        $is_valid = CryptoStat::validateAddress($this->currency, $value);
         return $is_valid;
     }
 
