@@ -17,7 +17,7 @@ class CreateWalletInfosTable extends Migration
             $table->increments('id');
             $table->unsignedInteger('wallet_id')->nullable();
             $table->double('balance')->nullable();
-            $table->date('created_at')->useCurrent();
+            $table->timestamp('created_at')->useCurrent();
 
             $table->foreign('wallet_id')
                 ->references('id')->on('wallets')
