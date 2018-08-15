@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Rules\IsValidAddress;
+
 use App\Services\LaravelCryptoStats\LaravelCryptoStatsFacade;
 
 class HomeController extends Controller
@@ -34,13 +36,12 @@ class HomeController extends Controller
     {
         if ($request->post())
         {
-            /*$request->validate([
+            $request->validate([
                 'currency' => 'required|string|max:3',
-                'wallet' => 'required|unique:wallets',
-            ]);*/
+                'address' => ['required', 'unique:wallets', new IsValidAddress($request->currency)],
+            ]);
             
-            $a = LaravelCryptoStatsFacade::validateWallet($request->currency, $request->wallet);
-            dd($a);
+            dd(111);
             
             return view('home');
         }
