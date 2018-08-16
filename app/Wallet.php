@@ -24,4 +24,12 @@ class Wallet extends Model
     {
         return $this->hasMany('App\WalletInfo');
     }
+    
+    /**
+     * Get the user that owns the wallet.
+     */
+    public function user()
+    {
+        return $this->belongsTo('App\User');
+    }
 }

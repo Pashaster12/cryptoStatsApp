@@ -4,6 +4,8 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use CryptoStat;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\BalanceChanged;
 
 use App\Wallet;
 
@@ -43,24 +45,41 @@ class UpdateBalance extends Command
         $wallets = Wallet::with('infos')->get();
         if (!$wallets->isEmpty())
         {
+            $user_data = [];
             foreach ($wallets as $wallet)
             {
+                $last_balance = 0;
+                
                 $new_balance = CryptoStat::getBalance($wallet->currency, $wallet->address);
                 if (!$wallet->infos->isEmpty())
                 {
                     $last_balance = $wallet->infos->last()->balance;
-                    if ($new_balance != $last_balance)
-                    {
-                        $wallet->infos()->create([
-                            'balance' => $new_balance,
-                        ]);
-                    }
-                } 
-                else
+                    if ($new_balance == $last_balance) continue;
+                }
+                
+                $saved = $wallet->infos()->create([
+                    'balance' => $new_balance,
+                ]);
+                
+                if($saved)
                 {
-                    $wallet->infos()->create([
+                    $user_data[$wallet->user->id]['user'] = $wallet->user;                    
+                    $user_data[$wallet->user->id]['wallets'][] = [
+                        'address' => $wallet->address,
                         'balance' => $new_balance,
-                    ]);
+                        'delta' => number_format($new_balance - $last_balance, 8)
+                    ];
+                }
+            }
+            
+            if($user_data)
+            {
+                foreach($user_data as $data)
+                {
+                    $message = (new BalanceChanged($data['user'], $data['wallets']));
+
+                    Mail::to($data['user']->email)
+                            ->queue($message);
                 }
             }
         }
