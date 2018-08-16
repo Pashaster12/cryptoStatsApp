@@ -16,7 +16,7 @@ class CreateWalletInfosTable extends Migration
         Schema::create('wallet_infos', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('wallet_id')->nullable();
-            $table->double('balance')->nullable();
+            $table->double('balance', 20, 8)->nullable();
             $table->timestamp('created_at')->useCurrent();
 
             $table->foreign('wallet_id')

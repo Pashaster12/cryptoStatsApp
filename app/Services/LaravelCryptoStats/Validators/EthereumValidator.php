@@ -2,8 +2,10 @@
 
 namespace App\Services\LaravelCryptoStats\Validators;
 
+use bb\Sha3\Sha3;
+
 class EthereumValidator
- {
+{
 
     /**
      * Checks if the given string is an address
@@ -21,7 +23,7 @@ class EthereumValidator
             return true;
         } else {
             // Otherwise check each case
-            return isChecksumAddress($address);
+            return self::isChecksumAddress($address);
         }
     }
 
@@ -35,7 +37,7 @@ class EthereumValidator
     public static function isChecksumAddress($address) {
         // Check each case
         $address = str_replace('0x', '', $address);
-        $addressHash = hash('sha3', strtolower($address));
+        $addressHash = Sha3::hash(strtolower($address), 256);
         $addressArray = str_split($address);
         $addressHashArray = str_split($addressHash);
 

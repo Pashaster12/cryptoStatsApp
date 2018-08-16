@@ -55,7 +55,7 @@ class ChainsoConnector implements ConnectorInterface
                     {
                         if($response_body['data'] && isset($response_body['data']['confirmed_balance']) && $response_body['status'] == 'success')
                         {
-                            return $response_body['data']['confirmed_balance'];
+                            return $this->roundBalance($response_body['data']['confirmed_balance']);
                         }
                     }
                 }
@@ -65,5 +65,12 @@ class ChainsoConnector implements ConnectorInterface
         }
         
         throw new RuntimeException('Currency and wallet address can not be empty!');
+    }
+    
+    public function roundBalance($balance): float
+    {
+        if(isset($balance)) return round($balance, 8);
+            
+        throw new RuntimeException('Balance can not be empty!');
     }
 }

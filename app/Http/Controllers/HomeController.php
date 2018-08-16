@@ -33,7 +33,7 @@ class HomeController extends Controller
                 ->orderByDesc('created_at')
                 ->paginate(20);
         
-        if($wallets)
+        if(!$wallets->isEmpty())
         {
             foreach($wallets as $key => $wallet)
             {

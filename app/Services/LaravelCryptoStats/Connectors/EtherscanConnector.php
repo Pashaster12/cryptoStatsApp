@@ -44,7 +44,7 @@ class EtherscanConnector implements ConnectorInterface
                     if($response_body && $response_body['status'])
                     {
                         $balance = $this->convertFromWei($response_body['result']);
-                        return $balance;
+                        return $this->roundBalance($balance);
                     }
                 }
             }
@@ -53,6 +53,13 @@ class EtherscanConnector implements ConnectorInterface
         }
         
         throw new RuntimeException('Currency and wallet address can not be empty!');        
+    }
+    
+    public function roundBalance($balance): float
+    {
+        if(isset($balance)) return round($balance, 8);
+            
+        throw new RuntimeException('Balance can not be empty!');
     }
     
     private function convertFromWei($balance): float

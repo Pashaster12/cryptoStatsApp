@@ -4,7 +4,7 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-12">
-            @if($wallets)
+            @if(!$wallets->isEmpty())
                 <div class="table-responsive">
                     <table class="table table-bordered bg-white text-center">
                         <thead class="thead-light">
