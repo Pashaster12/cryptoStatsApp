@@ -11,7 +11,7 @@ class LaravelCryptoStatsFactory
     {
         if($currency)
         {
-            if($currency == 'ETH') return new EtherscanConnector();
+            if($currency == 'ETH') return new EtherscanConnector('ETH');
             elseif($currency == 'BTC' || $currency == 'LTC') return new ChainsoConnector();
             
             throw new RuntimeException('"' . $currency . '" cryptocurrency is not supported now! List of the currently available values: "BTC", "LTC", "ETH"');

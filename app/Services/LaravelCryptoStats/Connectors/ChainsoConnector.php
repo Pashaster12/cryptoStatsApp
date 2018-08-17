@@ -2,75 +2,50 @@
 
 namespace App\Services\LaravelCryptoStats\Connectors;
 
-use GuzzleHttp\Client;
 use RuntimeException;
 
-class ChainsoConnector implements ConnectorInterface
+class ChainsoConnector extends AbstractConnector
 {
-    public function validateAddress($currency, $address)
+    private $supported_currencies = ['BTC', 'LTC'];
+    private $api_url_prefix = 'https://chain.so//api/v2/';
+    private $api_description = 'https://chain.so/api';
+    
+    public function validateAddress(string $currency, string $address): bool
     {
-        if($currency && $address)
-        {
-            if(in_array($currency, ['BTC', 'LTC']))
-            {
-                $url = 'https://chain.so/api/v2/is_address_valid/' . $currency . '/' . $address;
-
-                $client = new Client();
-                $response = $client->request('GET', $url);
-
-                if($response)
-                {
-                    $response_body = json_decode($response->getBody(), true);
-                    if($response_body && $response_body['status'])
-                    {
-                        if($response_body['data'] && $response_body['data']['is_valid'] && $response_body['status'] == 'success')
-                        {
-                            return $response_body['data']['is_valid'];
-                        }
-                    }
-                }
-            }
-            
-            throw new RuntimeException('"' . $currency . '"' . ' is not a supported cryptocurrency!');
-        }
+        $url = $this->api_url_prefix . 'is_address_valid/' . $currency . '/' . $address;
+        $params = [
+            'currency' => $currency,
+            'address' => $address
+        ];
         
-        throw new RuntimeException('Currency and wallet address can not be empty!');
+        $response = $this->getApiResponse($url, $params);
+        
+        if($response && isset($response['is_valid'])) return $response['is_valid'];
+        
+        throw new RuntimeException('Output data is not correct. Check the API description - ' . $this->api_description . '!');
     }
     
-    public function getBalance($currency, $address): float
+    public function getBalance(string $currency, string $address): float
     {
-        if($currency && $address)
-        {
-            if(in_array($currency, ['BTC', 'LTC']))
-            {
-                $url = 'https://chain.so//api/v2/get_address_balance/' . $currency . '/' . $address;
-
-                $client = new Client();
-                $response = $client->request('GET', $url);
-
-                if($response)
-                {
-                    $response_body = json_decode($response->getBody(), true);
-                    if($response_body && $response_body['status'])
-                    {
-                        if($response_body['data'] && isset($response_body['data']['confirmed_balance']) && $response_body['status'] == 'success')
-                        {
-                            return $this->roundBalance($response_body['data']['confirmed_balance']);
-                        }
-                    }
-                }
-            }
-            
-            throw new RuntimeException('"' . $currency . '"' . ' is not a supported cryptocurrency!');
-        }
+        $url = $this->api_url_prefix . 'get_address_balance/' . $currency . '/' . $address;
+        $params = [
+            'currency' => $currency,
+            'address' => $address
+        ];
         
-        throw new RuntimeException('Currency and wallet address can not be empty!');
+        $response = $this->getApiResponse($url, $params);
+        
+        if($response && isset($response['confirmed_balance'])) return $this->roundBalance($response['confirmed_balance']);
+        
+        throw new RuntimeException('Output data is not correct. Check the API description - ' . $this->api_description . '!');
     }
     
-    public function roundBalance($balance): float
+    private function getApiResponse(string $url, array $params)
     {
-        if(isset($balance)) return round($balance, 8);
-            
-        throw new RuntimeException('Balance can not be empty!');
+        $response = $this->sendApiRequest($url, $params);
+        if($response && $response['data'] && $response['status'] && $response['status'] == 'success')
+        {
+            return $response['data'];
+        }
     }
 }
