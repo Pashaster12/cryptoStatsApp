@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Services\LaravelCryptoStats;
+namespace App\Libraries\LaravelCryptoStats;
 
-use RuntimeException;
+use Exception;
 
 class LaravelCryptoStats
 {
@@ -12,6 +12,13 @@ class LaravelCryptoStats
      * @var array 
      */
     private $config;
+    
+    /**
+     * Cryptocurrency of the created instance
+     * 
+     * @var string 
+     */
+    private $currency;
     
     /**
      * LaravelCryptoStats buider
@@ -32,6 +39,16 @@ class LaravelCryptoStats
     }
     
     /**
+     * Set the value of the $currency variable
+     * 
+     * @param string $currency
+     */
+    public function setCurrency($currency)
+    {
+        $this->currency = $currency;
+    }
+    
+    /**
      * Dynamically call the method of the API connector instance
      *
      * @param  string  $method
@@ -40,11 +57,13 @@ class LaravelCryptoStats
      */
     public function __call($method, $parameters)
     {
+        if(!$this->currency) throw new Exception('Currency can not be null! Call setCurrency() for setting it.');
+        
         $factory = new LaravelCryptoStatsFactory();
-        $instance = $factory->getInstance($parameters[0]);
+        $instance = $factory->getInstance($this->currency);
         
         if (! $instance) {
-            throw new RuntimeException('Instance of the LaravelCryptoStats API connector was not created!');
+            throw new Exception('Instance of the LaravelCryptoStats API connector was not created!');
         }
         
         return $instance->$method(...$parameters);

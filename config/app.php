@@ -150,7 +150,7 @@ return [
         /*
          * Package Service Providers...
          */
-        App\Services\LaravelCryptoStats\LaravelCryptoStatsProvider::class,
+        App\Libraries\LaravelCryptoStats\LaravelCryptoStatsProvider::class,
         
         /*
          * Application Service Providers...
@@ -209,7 +209,7 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
-        'CryptoStat' => App\Services\LaravelCryptoStats\LaravelCryptoStatsFacade::class
+        'CryptoStat' => App\Libraries\LaravelCryptoStats\LaravelCryptoStatsFacade::class
     ],
 
 ];

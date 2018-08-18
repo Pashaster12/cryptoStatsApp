@@ -16,7 +16,7 @@ class CreateWalletsTable extends Migration
         Schema::create('wallets', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('user_id')->nullable();
-            $table->string('currency', 3)->nullable();
+            $table->string('currency', 4)->nullable();
             $table->string('address', 50)->unique()->nullable();
             $table->timestamp('created_at')->useCurrent();
             

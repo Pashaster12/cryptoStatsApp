@@ -28,7 +28,9 @@ class IsValidAddress implements Rule
      */
     public function passes($attribute, $value)
     {
-        $is_valid = CryptoStat::validateAddress($this->currency, $value);
+        CryptoStat::setCurrency($this->currency);
+        $is_valid = CryptoStat::validateAddress($value);
+        
         return $is_valid;
     }
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\LaravelCryptoStats;
+namespace App\Libraries\LaravelCryptoStats;
 
 use Illuminate\Support\ServiceProvider;
 
@@ -11,7 +11,7 @@ class LaravelCryptoStatsProvider extends ServiceProvider
      *
      * @var bool
      */
-    protected $defer = true;
+    protected $defer = false;
     
     /**
      * Bootstrap services.

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\LaravelCryptoStats;
+namespace App\Libraries\LaravelCryptoStats;
 
 use Illuminate\Support\Facades\Facade;
 

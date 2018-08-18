@@ -66,7 +66,7 @@
                             <label for="currency">Wallet cryptocurrency</label>
                             <select class="form-control" name="currency" id="currency">
                                 @foreach($currencies as $currency)
-                                    <option>{{ $currency }}</option>
+                                    <option {{ (old("currency") == $currency ? "selected":"") }}>{{ $currency }}</option>
                                 @endforeach
                             </select>
                         </div>

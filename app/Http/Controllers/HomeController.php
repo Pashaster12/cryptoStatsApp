@@ -31,7 +31,7 @@ class HomeController extends Controller
         $data['currencies'] = CryptoStat::getCurrencies();
         $wallets = Wallet::with('infos')
                 ->orderByDesc('created_at')
-                ->paginate(20);
+                ->paginate(config('constants.wallets_per_page'));
         
         if(!$wallets->isEmpty())
         {
@@ -40,27 +40,20 @@ class HomeController extends Controller
                 if($wallet)
                 {
                     //Building the block explorer link to the wallet address without DB saving
-                    $prefix = '';
-                    switch ($wallet['currency'])
-                    {
-                        case 'ETH':
-                            $prefix = 'https://etherscan.io/address/';
-                            break;
-                        case 'BTC':
-                        case 'LTC':
-                            $prefix = 'https://chain.so/address/' . $wallet['currency'] . '/';
-                            break;
-                    }
-                    
-                    $wallets[$key]['block_explorer_link'] = $prefix . $wallet['address'];
+                    CryptoStat::setCurrency($wallet['currency']);
+                    $wallets[$key]['block_explorer_link'] = CryptoStat::getBlockExplorerLink($wallet['address']);
                     
                     //Fill the balance and date of balance updating with blank 
                     //if there are no balance updating records in the walloe_infos table yet.
-                    //For others just create the specialized attribute in the wallet array
+                    //For others just create the specialized attribute in the wallet array                                       
                     if(!$wallet->infos->isEmpty())
-                    {                        
-                        $wallets[$key]['last_balance_updating'] = $wallet->infos->last()->created_at;
-                        $wallets[$key]['last_balance'] = $wallet->infos->last()->balance;
+                    {
+                        $created_at = $wallet->infos->last()->created_at;
+                        $balance = $wallet->infos->last()->balance;
+                        
+                        //Round the balance value with the rounding_degree param
+                        $wallets[$key]['last_balance'] = number_format($balance, config('constants.rounding_degree'), '.', '');
+                        $wallets[$key]['last_balance_updating'] = $created_at;
                     }
                     else $wallets[$key]['last_balance_updating'] = $wallets[$key]['last_balance'] = 'N/A';
                 }
@@ -72,12 +65,17 @@ class HomeController extends Controller
         return view('home', $data);
     }
     
+    /**
+     * 
+     * @param Request $request
+     * @return type
+     */
     public function addWallet(Request $request)
     {
         if ($request->post())
         {
             $request->validate([
-                'currency' => 'required|string|max:3',
+                'currency' => 'required|string|max:4',
                 'address' => ['required', 'unique:wallets', new IsValidAddress($request->currency)],
             ]);
             
