@@ -15,10 +15,6 @@ Auth::routes();
 
 //Application routes
 Route::get('/', 'HomeController@index')->name('home');
-
-Route::get('test', function() {
-    Artisan::call('updatebalance');
-});
-    
+   
 //Ajax routes
 Route::post('/addWallet', 'HomeController@addWallet');
