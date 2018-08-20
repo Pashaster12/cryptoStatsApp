@@ -2,8 +2,6 @@
 
 namespace App\Libraries\LaravelCryptoStats\Services;
 
-use bb\Sha3\Sha3;
-
 class EthereumValidator
 {
 
@@ -44,7 +42,7 @@ class EthereumValidator
     {
         // Check each case
         $address = str_replace('0x', '', $address);
-        $addressHash = Sha3::hash(strtolower($address), 256);
+        $addressHash = hash('sha3-256', strtolower($address));
         $addressArray = str_split($address);
         $addressHashArray = str_split($addressHash);
 
