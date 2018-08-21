@@ -22,7 +22,7 @@ class LaravelCryptoStatsFactory
     public function __construct()
     {
         $cf = new ClassFinder();
-        $classes = $cf->getClassesInNamespace(__NAMESPACE__ . DIRECTORY_SEPARATOR . 'Connectors');
+        $classes = $cf->getClassesInNamespace(__NAMESPACE__ . '\Connectors');
         
         $this->connectors = $classes;
     }
