@@ -37,21 +37,21 @@ class LaravelCryptoStatsFactory
     public function getInstance($currency)
     {
         $connectors = $this->connectors;
-        if($connectors)
-        {
+        if ($connectors) {
             $supported_currencies = [];
             $instance = [];
 
-            foreach($connectors as $connector)
-            {
+            foreach ($connectors as $connector) {
                 $connector_instance = new $connector($currency);
                 $supported_currencies = array_merge($supported_currencies, $connector_instance->supported_currencies);
 
-                if(in_array($currency, $connector_instance->supported_currencies)) $instance = $connector_instance;
+                if (in_array($currency, $connector_instance->supported_currencies))
+                    $instance = $connector_instance;
             }
 
-            if($instance) return $instance;
-            
+            if ($instance)
+                return $instance;
+
             $supported_currencies = implode(', ', $supported_currencies);
 
             throw new Exception('"' . $currency . '" cryptocurrency is not supported now! Currently available values: ' . $supported_currencies);

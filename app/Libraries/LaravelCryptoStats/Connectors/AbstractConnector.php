@@ -71,7 +71,7 @@ abstract class AbstractConnector
      * @param bool $address
      * @return bool
      */
-    public abstract function validateAddress(string $address): bool;
+    abstract public function validateAddress(string $address): bool;
     
     /**
      * Get balance of the cryptocurrency wallet address
@@ -79,7 +79,7 @@ abstract class AbstractConnector
      * @param string $address
      * @return float
      */
-    public abstract function getBalance(string $address): float;
+    abstract public function getBalance(string $address): float;
     
     /**
      * Get the wallet link to the corresponding block explorer (block link)
@@ -87,7 +87,7 @@ abstract class AbstractConnector
      * @param string $address
      * @return string
      */
-    public abstract function getBlockExplorerLink(string $address): string;
+    abstract public function getBlockExplorerLink(string $address): string;
     
     /**
      * Process the API response
@@ -95,7 +95,7 @@ abstract class AbstractConnector
      * @param string $url
      * @return mixed
      */
-    protected abstract function apiCall(string $url);
+    abstract protected function apiCall(string $url);
     
     /**
      * Wrappep of the Guzzle client for univarsal sending API calls 

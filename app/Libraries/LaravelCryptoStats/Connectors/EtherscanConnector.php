@@ -21,19 +21,17 @@ class EtherscanConnector extends AbstractConnector
     
     public function getBalance(string $address): float
     {
-        if($address)
-        {
+        if ($address) {
             $url = $this->api_url_prefix . 'module=account&action=balance&address=' . $address . '&tag=latest&apikey=' . $this->config['etherscan_api_key'];
             $response = $this->apiCall($url);
 
-            if(is_numeric($response))
-            {
+            if (is_numeric($response)) {
                 $balance = $this->convertFromWei($response);
                 return $this->roundBalance($balance);
-            }
-            else throw new Exception($response);
+            } else
+                throw new Exception($response);
         }
-        
+
         throw new Exception('Wallet address can not be empty!');
     }
     
@@ -47,11 +45,10 @@ class EtherscanConnector extends AbstractConnector
     protected function apiCall(string $url)
     {
         $response = $this->sendApiRequest($url);
-        if ($response && isset($response['status']) && isset($response['result']))
-        {
+        if ($response && isset($response['status']) && isset($response['result'])) {
             return $response['result'];
         }
-        
+
         throw new Exception('Output data is not correct. Check the API description - ' . $this->api_description . '!');
     }
 
