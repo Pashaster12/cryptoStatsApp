@@ -12,6 +12,6 @@ return [
     /**
      * The number of wallets per page at the address list
      */
-    'wallets_per_page' => 20
+    'wallets_per_page' => 10
 ];
 
