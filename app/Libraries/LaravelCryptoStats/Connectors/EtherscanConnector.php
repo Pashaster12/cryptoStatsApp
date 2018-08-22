@@ -12,7 +12,7 @@ class EtherscanConnector extends AbstractConnector
     protected $api_description = 'https://etherscan.io/apis';    
     protected $block_link_prefix = 'https://etherscan.io/address/';
     
-    public function validateAddress($address): bool
+    public function validateAddress(string $address): bool
     {
         if($address) return EthereumValidator::isAddress($address);
         

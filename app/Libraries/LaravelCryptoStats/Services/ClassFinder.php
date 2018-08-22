@@ -15,20 +15,19 @@ class ClassFinder
     public static function getClassesInNamespace($namespace)
     {
         $files = scandir(self::getNamespaceDirectory($namespace));
-        
-        $classes = array_map(function($file) use ($namespace){
+
+        $classes = array_map(function($file) use ($namespace) {
             return $namespace . '\\' . str_replace('.php', '', $file);
         }, $files);
 
         return array_filter($classes, function($possibleClass) {
             $is_abstract = true;
-            
-            if(class_exists($possibleClass))
-            {
+
+            if (class_exists($possibleClass)) {
                 $reflection_instance = new \ReflectionClass($possibleClass);
                 $is_abstract = $reflection_instance->isAbstract();
             }
-            
+
             return !$is_abstract;
         });
     }
@@ -46,22 +45,20 @@ class ClassFinder
     private static function getNamespaceDirectory($namespace)
     {
         $composerNamespaces = self::getDefinedNamespaces();
-        
+
         $namespaceFragments = explode('\\', $namespace);
         $undefinedNamespaceFragments = [];
-        
-        while($namespaceFragments)
-        {
+
+        while ($namespaceFragments) {
             $possibleNamespace = implode('\\', $namespaceFragments) . '\\';
 
-            if(array_key_exists($possibleNamespace, $composerNamespaces))
-            {
+            if (array_key_exists($possibleNamespace, $composerNamespaces)) {
                 return realpath(self::$appRoot . $composerNamespaces[$possibleNamespace] . implode('/', $undefinedNamespaceFragments));
             }
 
-            array_unshift($undefinedNamespaceFragments, array_pop($namespaceFragments));            
+            array_unshift($undefinedNamespaceFragments, array_pop($namespaceFragments));
         }
-        
+
         return false;
     }
 }

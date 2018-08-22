@@ -106,18 +106,16 @@ abstract class AbstractConnector
      */
     protected function sendApiRequest(string $url)
     {
-        if($url)
-        {
+        if ($url) {
             $client = new Client();
             $response = $client->request('GET', $url);
 
-            if($response)
-            {
+            if ($response) {
                 $response_body = json_decode($response->getBody(), true);
-                return $response_body;                
-            }            
+                return $response_body;
+            }
         }
-        
+
         throw new Exception('Something wrong with API ' . $url . ' call!');
     }
     
