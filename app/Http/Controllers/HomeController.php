@@ -29,7 +29,7 @@ class HomeController extends Controller
     public function index()
     {
         $data['currencies'] = CryptoStat::getCurrencies();
-        $wallets = Wallet::with('infos')
+        $wallets = Wallet::with('latestInfo')
                 ->orderByDesc('created_at')
                 ->paginate(config('constants.wallets_per_page'));
 
@@ -44,8 +44,8 @@ class HomeController extends Controller
                     //if there are no balance updating records in the walloe_infos table yet.
                     //For others just create the specialized attribute in the wallet array                                       
                     if (!$wallet->infos->isEmpty()) {
-                        $created_at = $wallet->infos->last()->created_at;
-                        $balance = $wallet->infos->last()->balance;
+                        $created_at = $wallet->latestInfo->created_at;
+                        $balance = $wallet->latestInfo->balance;
 
                         //Round the balance value with the rounding_degree param
                         $wallets[$key]['last_balance'] = number_format($balance, config('constants.rounding_degree'), '.', '');
