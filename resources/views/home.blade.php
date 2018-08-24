@@ -10,10 +10,11 @@
                         <thead class="thead-light">
                             <tr>
                                 <th scope="col">#</th>
-                                <th scope="col">Block explorer link</th>
+                                <th scope="col">Wallet address</th>
+                                <th scope="col">Currency</th>
                                 <th scope="col">Latest balance</th>
                                 <th scope="col">Wallet creation date</th>
-                                <th scope="col">Wallet balance changing date</th>
+                                <th scope="col">Balance changing date</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -21,6 +22,7 @@
                                 <tr>
                                     <th scope="row">{{ $key + 1 }}</th>
                                     <td><a href="{{ $wallet['block_explorer_link'] }}" title="Press for new tab opening" target="_blank" rel="nofollow noindex">{{ $wallet['address'] }}</a></td>
+                                    <td>{{ $wallet['currency'] }}</td>
                                     <td>{{ $wallet['last_balance'] }}</td>
                                     <td>{{ $wallet['created_at'] }}</td>
                                     <td>{{ $wallet['last_balance_updating'] }}</td>
