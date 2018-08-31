@@ -73,13 +73,13 @@ class HomeController extends Controller
                 'currency' => 'required|string|max:4',
                 'address' => ['required', 'unique:wallets', new IsValidAddress($request->currency)],
             ]);
-
+            
             $flight = new Wallet;
             $flight->user_id = Auth::id();
             $flight->currency = $request->currency;
             $flight->address = $request->address;
             $inserted = $flight->save();
-
+            
             $result = $inserted ? redirect('/')->with('status', 'Wallet was successfully added!') : redirect('/')->withErrors('Wallet was not added!');
 
             return $result;

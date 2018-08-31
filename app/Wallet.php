@@ -12,7 +12,7 @@ class Wallet extends Model
      * @var array
      */
     protected $fillable = [
-        'address'
+        'user_id', 'address', 'currency'
     ];
     
     public $timestamps = false;

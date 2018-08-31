@@ -45,6 +45,7 @@ class UpdateBalance extends Command
     public function handle()
     {
         $wallets = Wallet::with('latestInfo')->get();
+        if(!$wallets) return $this->error('There are no wallets!');
         
         //Updating the balance values for wallet records in DB
         //and collecting the array of changed wallets sorted by user_ids
@@ -74,7 +75,7 @@ class UpdateBalance extends Command
                     $user_data[$wallet->user->id]['wallets'][] = [
                         'address' => $wallet->address,
                         'balance' => $new_balance,
-                        'delta' => $this->formatNumber($new_balance - $last_balance)
+                        'delta' => format_number($new_balance - $last_balance)
                     ];
                 }
             }
@@ -82,6 +83,8 @@ class UpdateBalance extends Command
         
         //sending email notifications for users about their wallets balance changes
         $this->sendNotifications($user_data);
+        
+        $this->line('ok');
     }
     
     /**
@@ -93,21 +96,23 @@ class UpdateBalance extends Command
     private function checkBalanceChanged($wallet)
     {
         $result = [];
-        $last_balance = null;
+        $last_balance_rounded = null;
         
         CryptoStat::setCurrency($wallet->currency);
         $new_balance = CryptoStat::getBalance($wallet->address);
-        $new_balance_rounded = $this->formatNumber($new_balance);
+        $new_balance_rounded = format_number($new_balance);
         
         //if balance of the wallet hasn't changed, do nothing
         if (!$wallet->infos->isEmpty()) {
             $last_balance = $wallet->latestInfo->balance;
-            if ($new_balance_rounded == $last_balance) return $result;
+            $last_balance_rounded = format_number($last_balance);
+            
+            if ($new_balance_rounded == $last_balance_rounded) return $result;
         }
         
         $result = [
             'new_balance' => $new_balance_rounded,
-            'last_balance' => $last_balance
+            'last_balance' => $last_balance_rounded
         ];
 
         return $result;
@@ -129,16 +134,5 @@ class UpdateBalance extends Command
                 Mail::to($data['user']->email)->queue($message);
             }
         }        
-    }
-    
-    /**
-     * Round the balance value with the rounding_degree config value
-     * 
-     * @param float $number
-     * @return float
-     */
-    private function formatNumber(float $number): float
-    {
-        return number_format($number, config('constants.rounding_degree'), '.', '');
     }
 }
